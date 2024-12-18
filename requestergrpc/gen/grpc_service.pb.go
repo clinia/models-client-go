@@ -30,7 +30,7 @@
 // 	protoc        v5.27.3
 // source: grpc_service.proto
 
-package requestergrpc
+package gen
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -799,7 +799,59 @@ type InferParameter_Int64Param struct {
 	// @@    .. cpp:var:: int64 int64_param
 	// @@
 	// @@       An int64 parameter value.
-	// @@// @@
+	// @@
+	Int64Param int64 `protobuf:"varint,2,opt,name=int64_param,json=int64Param,proto3,oneof"`
+}
+
+type InferParameter_StringParam struct {
+	// @@    .. cpp:var:: string string_param
+	// @@
+	// @@       A string parameter value.
+	// @@
+	StringParam string `protobuf:"bytes,3,opt,name=string_param,json=stringParam,proto3,oneof"`
+}
+
+type InferParameter_DoubleParam struct {
+	// @@    .. cpp:var:: double double_param
+	// @@
+	// @@       A double parameter value.
+	// @@
+	DoubleParam float64 `protobuf:"fixed64,4,opt,name=double_param,json=doubleParam,proto3,oneof"`
+}
+
+type InferParameter_Uint64Param struct {
+	// @@    .. cpp:var:: uint64 uint64_param
+	// @@
+	// @@       A uint64 parameter value.
+	// @@
+	// @@       Not supported for custom parameters
+	// @@
+	Uint64Param uint64 `protobuf:"varint,5,opt,name=uint64_param,json=uint64Param,proto3,oneof"`
+}
+
+func (*InferParameter_BoolParam) isInferParameter_ParameterChoice() {}
+
+func (*InferParameter_Int64Param) isInferParameter_ParameterChoice() {}
+
+func (*InferParameter_StringParam) isInferParameter_ParameterChoice() {}
+
+func (*InferParameter_DoubleParam) isInferParameter_ParameterChoice() {}
+
+func (*InferParameter_Uint64Param) isInferParameter_ParameterChoice() {}
+
+// @@
+// @@.. cpp:var:: message InferTensorContents
+// @@
+// @@   The data contained in a tensor represented by the repeated type
+// @@   that matches the tensor's data type. Protobuf oneof is not used
+// @@   because oneofs cannot contain repeated fields.
+// @@
+type InferTensorContents struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// @@
 	// @@  .. cpp:var:: bool bool_contents (repeated)
 	// @@
 	// @@     Representation for BOOL data type. The size must match what is
@@ -865,58 +917,6 @@ type InferParameter_Int64Param struct {
 	// @@     one-dimensional, row-major order of the tensor elements.
 	// @@
 	BytesContents [][]byte `protobuf:"bytes,8,rep,name=bytes_contents,json=bytesContents,proto3" json:"bytes_contents,omitempty"`
-	Int64Param int64 `protobuf:"varint,2,opt,name=int64_param,json=int64Param,proto3,oneof"`
-}
-
-type InferParameter_StringParam struct {
-	// @@    .. cpp:var:: string string_param
-	// @@
-	// @@       A string parameter value.
-	// @@
-	StringParam string `protobuf:"bytes,3,opt,name=string_param,json=stringParam,proto3,oneof"`
-}
-
-type InferParameter_DoubleParam struct {
-	// @@    .. cpp:var:: double double_param
-	// @@
-	// @@       A double parameter value.
-	// @@
-	DoubleParam float64 `protobuf:"fixed64,4,opt,name=double_param,json=doubleParam,proto3,oneof"`
-}
-
-type InferParameter_Uint64Param struct {
-	// @@    .. cpp:var:: uint64 uint64_param
-	// @@
-	// @@       A uint64 parameter value.
-	// @@
-	// @@       Not supported for custom parameters
-	// @@
-	Uint64Param uint64 `protobuf:"varint,5,opt,name=uint64_param,json=uint64Param,proto3,oneof"`
-}
-
-func (*InferParameter_BoolParam) isInferParameter_ParameterChoice() {}
-
-func (*InferParameter_Int64Param) isInferParameter_ParameterChoice() {}
-
-func (*InferParameter_StringParam) isInferParameter_ParameterChoice() {}
-
-func (*InferParameter_DoubleParam) isInferParameter_ParameterChoice() {}
-
-func (*InferParameter_Uint64Param) isInferParameter_ParameterChoice() {}
-
-// @@
-// @@.. cpp:var:: message InferTensorContents
-// @@
-// @@   The data contained in a tensor represented by the repeated type
-// @@   that matches the tensor's data type. Protobuf oneof is not used
-// @@   because oneofs cannot contain repeated fields.
-// @@
-type InferTensorContents struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	
 }
 
 func (x *InferTensorContents) Reset() {

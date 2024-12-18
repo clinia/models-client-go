@@ -32,7 +32,7 @@
 // 	protoc        v5.27.3
 // source: model_config.proto
 
-package requestergrpc
+package gen
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"

@@ -30,7 +30,7 @@
 // - protoc             v5.27.3
 // source: grpc_service.proto
 
-package requestergrpc
+package gen
 
 import (
 	context "context"

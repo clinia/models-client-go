@@ -5,7 +5,8 @@ import (
 )
 
 type Requester interface {
-	Infer(ctx context.Context, modelName, modelVersion string, inputs []Input) ([]Output, error)
+	// 
+	Infer(ctx context.Context, modelName, modelVersion string, inputs []Input, outputKeys []string) ([]Output, error)
 	Stream(ctx context.Context, modelName, modelVersion string, inputs []Input) (chan <- string,  error)
 	Close() error
 }
@@ -14,3 +15,5 @@ type Requester interface {
 type RequesterConfig struct {
 	Host Host
 }
+
+
