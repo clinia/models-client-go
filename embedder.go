@@ -16,6 +16,5 @@ type EmbedRequest struct {
 
 type EmbedResponse struct {
 	ID         string
-
 	Embeddings [][]float32
 }
