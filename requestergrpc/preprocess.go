@@ -18,7 +18,7 @@ func preprocess(texts []string) ([]byte, []int64, error) {
 	return inputs, shape, nil
 }
 
-// inferInputsFromTexts converts a slice of texts into a 2D byte tensor.
+// encodeText converts a slice of texts into a 2D byte tensor.
 func encodeText(texts []string) [][]byte {
 	// Convert texts to []byte slices
 	encodedData := make([][]byte, len(texts))

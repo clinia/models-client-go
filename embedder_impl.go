@@ -49,7 +49,7 @@ func (e *embedder) Embed(ctx context.Context, modelName, modelVersion string, re
 	}
 
 	// Since we have only one output, we can directly access the first output.
-	// We already check the size of the output in the infer function.
+	// We already check the size of the output in the infer function therefore we can "safely" access the element 0.
 	embeddings := outputs[0].GetFp32Contents()
 	return EmbedResponse{
 		ID:         req.ID,
