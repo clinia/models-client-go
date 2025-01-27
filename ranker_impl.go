@@ -62,7 +62,7 @@ func (r *ranker) Rank(ctx context.Context, modelName string, modelVersion string
 		},
 	}
 
-	// The embedder model has only one input and one output.
+	// The ranker model has only one input and one output.
 	outputKeys := []string{rankerScoreOutputKey}
 
 	outputs, err := r.requester.Infer(ctx, modelName, modelVersion, inputs, outputKeys)
