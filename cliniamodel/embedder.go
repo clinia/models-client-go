@@ -1,4 +1,4 @@
-package main
+package cliniamodel
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 
 type Embedder interface {
 	// Embed returns the embeddings of the given texts.
-	Embed(ctx context.Context, modelName, modelVersion string, req EmbedRequest) (EmbedResponse, error)
+	Embed(ctx context.Context, modelName, modelVersion string, req EmbedRequest) (*EmbedResponse, error)
 }
 
 type EmbedRequest struct {

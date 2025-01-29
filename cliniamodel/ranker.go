@@ -1,15 +1,15 @@
-package main
+package cliniamodel
 
 import "context"
 
 type Ranker interface {
 	// Rank returns the ranked results of the given texts.
-	Rank(ctx context.Context, modelName, modelVersion string, req RankRequest) (RankResponse, error)
+	Rank(ctx context.Context, modelName, modelVersion string, req RankRequest) (*RankResponse, error)
 }
 
 type RankRequest struct {
-	ID       string
-	Query    string
+	ID    string
+	Query string
 	Texts []string
 }
 

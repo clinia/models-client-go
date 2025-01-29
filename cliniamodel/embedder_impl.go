@@ -1,10 +1,10 @@
-package main
+package cliniamodel
 
 import (
 	"context"
 
-	"github.com/clinia/models-client-go/common"
-	"github.com/clinia/models-client-go/datatype"
+	"github.com/clinia/models-client-go/cliniamodel/common"
+	"github.com/clinia/models-client-go/cliniamodel/datatype"
 )
 
 const (
@@ -19,23 +19,21 @@ type embedder struct {
 
 var _ Embedder = (*embedder)(nil)
 
-func NewEmbedder(ctx context.Context, opts common.ClientOptions) (Embedder) {
+func NewEmbedder(ctx context.Context, opts common.ClientOptions) Embedder {
 	return &embedder{
 		requester: opts.Requester,
 	}
 }
 
 // Embed implements Embedder.
-func (e *embedder) Embed(ctx context.Context, modelName, modelVersion string, req EmbedRequest) (EmbedResponse, error) {
+func (e *embedder) Embed(ctx context.Context, modelName, modelVersion string, req EmbedRequest) (*EmbedResponse, error) {
 	inputs := []common.Input{
 		{
 			Name:     embedderInputKey,
 			Shape:    []int64{int64(len(req.Texts))},
 			Datatype: embedderInputDatatype,
-			Contents: []common.Content{
-				{
-					StringContents: req.Texts,
-				},
+			Content: common.Content{
+				StringContents: req.Texts,
 			},
 		},
 	}
@@ -43,16 +41,26 @@ func (e *embedder) Embed(ctx context.Context, modelName, modelVersion string, re
 	// The embedder model has only one input and one output.
 	outputKeys := []string{embedderOutputKey}
 
-	outputs, err := e.requester.Infer(ctx, modelName, modelVersion, inputs, outputKeys)
+	res, err := e.requester.Infer(ctx, common.InferRequest{
+		ID:           req.ID,
+		ModelName:    modelName,
+		ModelVersion: modelVersion,
+		Inputs:       inputs,
+		OutputKeys:   outputKeys,
+	})
 	if err != nil {
-		return EmbedResponse{}, err
+		return nil, err
 	}
 
 	// Since we have only one output, we can directly access the first output.
 	// We already check the size of the output in the infer function therefore we can "safely" access the element 0.
-	embeddings := outputs[0].GetFp32Contents()
-	return EmbedResponse{
-		ID:         req.ID,
+	embeddings, err := res.Outputs[0].Fp32MatrixContent()
+	if err != nil {
+		return nil, err
+	}
+
+	return &EmbedResponse{
+		ID:         res.ID,
 		Embeddings: embeddings,
 	}, nil
 }
