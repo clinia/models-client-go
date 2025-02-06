@@ -65,7 +65,7 @@ func (r *requester) Infer(ctx context.Context, req common.InferRequest) (*common
 	}
 
 	// Prepare output keys
-	grpcOutputs := make([]*gen.ModelInferRequest_InferRequestedOutputTensor, len(req.Inputs))
+	grpcOutputs := make([]*gen.ModelInferRequest_InferRequestedOutputTensor, len(req.OutputKeys))
 	for i, outputKey := range req.OutputKeys {
 		grpcOutputs[i] = &gen.ModelInferRequest_InferRequestedOutputTensor{
 			Name: outputKey,
