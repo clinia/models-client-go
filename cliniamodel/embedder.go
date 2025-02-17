@@ -10,11 +10,15 @@ type Embedder interface {
 }
 
 type EmbedRequest struct {
-	ID    string
+	// ID is the unique identifier for the request.
+	ID string
+	// Texts is the list of texts to be embedded.
 	Texts []string
 }
 
 type EmbedResponse struct {
-	ID         string
+	// ID is the unique identifier for the response, corresponding to that of the request.
+	ID string
+	// Embeddings is the list of embeddings for each text. Each embedding is a list of floats, corresponding to the embedding dimensions. The outer list length matches the number of input texts.
 	Embeddings [][]float32
 }

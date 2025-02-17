@@ -6,7 +6,7 @@ import (
 
 	"github.com/clinia/models-client-go/cliniamodel/common"
 	"github.com/clinia/models-client-go/cliniamodel/datatype"
-	"github.com/clinia/models-client-go/cliniamodel/requestergrpc/gen"
+	requestergrpc "github.com/clinia/models-client-go/cliniamodel/requestergrpc/gen"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -14,7 +14,7 @@ import (
 type requester struct {
 	conn *grpc.ClientConn
 
-	inferenceServiceClient gen.GRPCInferenceServiceClient
+	inferenceServiceClient requestergrpc.GRPCInferenceServiceClient
 }
 
 var _ common.Requester = (*requester)(nil)
@@ -34,14 +34,14 @@ func NewRequester(ctx context.Context, cfg common.RequesterConfig) (common.Reque
 
 	return &requester{
 		conn:                   conn,
-		inferenceServiceClient: gen.NewGRPCInferenceServiceClient(conn),
+		inferenceServiceClient: requestergrpc.NewGRPCInferenceServiceClient(conn),
 	}, nil
 }
 
 // Infer implements common.Requester.
 func (r *requester) Infer(ctx context.Context, req common.InferRequest) (*common.InferResponse, error) {
 	// Prepare input tensors
-	grpcInputs := make([]*gen.ModelInferRequest_InferInputTensor, len(req.Inputs))
+	grpcInputs := make([]*requestergrpc.ModelInferRequest_InferInputTensor, len(req.Inputs))
 	rawInputs := make([][]byte, len(req.Inputs))
 	for i, input := range req.Inputs {
 
@@ -55,7 +55,7 @@ func (r *requester) Infer(ctx context.Context, req common.InferRequest) (*common
 			return nil, err
 		}
 
-		grpcInputs[i] = &gen.ModelInferRequest_InferInputTensor{
+		grpcInputs[i] = &requestergrpc.ModelInferRequest_InferInputTensor{
 			Name:     input.Name,
 			Shape:    shape,
 			Datatype: string(input.Datatype),
@@ -65,14 +65,14 @@ func (r *requester) Infer(ctx context.Context, req common.InferRequest) (*common
 	}
 
 	// Prepare output keys
-	grpcOutputs := make([]*gen.ModelInferRequest_InferRequestedOutputTensor, len(req.OutputKeys))
+	grpcOutputs := make([]*requestergrpc.ModelInferRequest_InferRequestedOutputTensor, len(req.OutputKeys))
 	for i, outputKey := range req.OutputKeys {
-		grpcOutputs[i] = &gen.ModelInferRequest_InferRequestedOutputTensor{
+		grpcOutputs[i] = &requestergrpc.ModelInferRequest_InferRequestedOutputTensor{
 			Name: outputKey,
 		}
 	}
 
-	res, err := r.inferenceServiceClient.ModelInfer(ctx, &gen.ModelInferRequest{
+	res, err := r.inferenceServiceClient.ModelInfer(ctx, &requestergrpc.ModelInferRequest{
 		Id:               req.ID,
 		ModelName:        req.ModelName,
 		ModelVersion:     req.ModelVersion,

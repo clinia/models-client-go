@@ -8,12 +8,17 @@ type Ranker interface {
 }
 
 type RankRequest struct {
-	ID    string
+	// ID is the unique identifier for the request. If not provided, a random UUIDv4 will be generated.
+	ID string
+	// Query is the query to rank the passages against.
 	Query string
+	// Texts is the list of passages to be ranked.
 	Texts []string
 }
 
 type RankResponse struct {
-	ID     string
+	// ID is the unique identifier for the response, corresponding to that of the request.
+	ID string
+	// Scores is the list of scores for each pair of query and passage.
 	Scores []float32
 }

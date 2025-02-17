@@ -6,7 +6,7 @@ require (
 	github.com/clinia/x v0.0.104
 	github.com/google/go-cmp v0.6.0
 	google.golang.org/grpc v1.69.0
-	google.golang.org/protobuf v1.36.0
+	google.golang.org/protobuf v1.36.5
 )
 
 require (

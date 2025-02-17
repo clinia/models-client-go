@@ -3,21 +3,21 @@ package cliniamodel
 import "context"
 
 type Chunker interface {
+	// Chunk returns the chunked results of the given texts.
 	Chunk(ctx context.Context, modelName, modelVersion string, req ChunkRequest) (*ChunkResponse, error)
 }
 
 type ChunkRequest struct {
-	// ID is a unique identifier for the request.
+	// ID is the unique identifier for the request.
 	ID string
-	// Texts will be a list of texts to be chunked.
+	// Texts is the list of texts to be chunked.
 	Texts []string
 }
 
 type ChunkResponse struct {
-	// ID is a unique identifier for the response.
+	// ID is the unique identifier for the response, corresponding to that of the request.
 	ID string
-	// Chunks will be a list of chunks for each text in the input.
-	// The length of the list will be equal to the length of the input texts.
+	// Chunks is the list of chunks in which each text is split. The outer list length matches the number of input texts.
 	Chunks [][]Chunk
 }
 

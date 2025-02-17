@@ -13,19 +13,21 @@ const (
 	embedderInputDatatype        = datatype.Bytes
 )
 
+// embedder is a struct that implements the Embedder interface.
 type embedder struct {
 	requester common.Requester
 }
 
 var _ Embedder = (*embedder)(nil)
 
+// NewEmbedder creates a new instance of embedder.
 func NewEmbedder(ctx context.Context, opts common.ClientOptions) Embedder {
 	return &embedder{
 		requester: opts.Requester,
 	}
 }
 
-// Embed implements Embedder.
+// Embed generates embeddings for the given texts using the specified model and version.
 func (e *embedder) Embed(ctx context.Context, modelName, modelVersion string, req EmbedRequest) (*EmbedResponse, error) {
 	inputs := []common.Input{
 		{

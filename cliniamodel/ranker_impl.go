@@ -19,19 +19,24 @@ const (
 	rankerScoreOutputKey string = "score"
 )
 
+// ranker is a struct that implements the Ranker interface.
 type ranker struct {
 	requester common.Requester
 }
 
 var _ Ranker = (*ranker)(nil)
 
+// NewRanker creates a new instance of ranker with the provided options.
 func NewRanker(opts common.ClientOptions) Ranker {
 	return &ranker{
 		requester: opts.Requester,
 	}
 }
 
-// Rank implements Ranker.
+// Rank implements the Ranker interface. It takes a context, model name, model version, and a RankRequest,
+// and returns a RankResponse or an error. The function duplicates the query to match the size of the texts,
+// prepares the inputs, and calls the infer function of the requester. It then processes the output to
+// return the scores.
 func (r *ranker) Rank(ctx context.Context, modelName string, modelVersion string, req RankRequest) (*RankResponse, error) {
 	// Duplicate query to be the same size as texts
 	inputQueries := make([]string, len(req.Texts))

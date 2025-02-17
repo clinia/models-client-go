@@ -16,19 +16,22 @@ const (
 	chunkerOutputPadKey = "pad"
 )
 
+// chunker is a struct that implements the Chunker interface.
 type chunker struct {
 	requester common.Requester
 }
 
 var _ Chunker = (*chunker)(nil)
 
+// NewChunker creates a new chunker instance.
 func NewChunker(ctx context.Context, opts common.ClientOptions) Chunker {
 	return &chunker{
 		requester: opts.Requester,
 	}
 }
 
-// chunk implements Chunker.
+// Chunk implements the Chunker interface. It takes a context, model name, model version, and a ChunkRequest as input,
+// and returns a ChunkResponse or an error.
 func (c *chunker) Chunk(ctx context.Context, modelName string, modelVersion string, req ChunkRequest) (*ChunkResponse, error) {
 	// Prepare the inputs.
 	inputs := []common.Input{
