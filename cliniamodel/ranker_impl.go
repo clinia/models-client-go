@@ -13,7 +13,7 @@ const (
 	rankerQueryInputDatatype datatype.Datatype = datatype.Bytes
 
 	// TODO: Change to text
-	rankerPassageInputKey      string            = "passage"
+	rankerPassageInputKey      string            = "text"
 	rankerPassageInputDatatype datatype.Datatype = datatype.Bytes
 
 	rankerScoreOutputKey string = "score"
@@ -89,7 +89,7 @@ func (r *ranker) Rank(ctx context.Context, modelName string, modelVersion string
 	var flattenedScores []float32
 	for _, score := range scores {
 		if len(score) != 1 {
-			return nil, fmt.Errorf("Expected a single score per passage, but got %d elements", len(score))
+			return nil, fmt.Errorf("Expected a single score per text, but got %d elements", len(score))
 		}
 		flattenedScores = append(flattenedScores, score...)
 	}

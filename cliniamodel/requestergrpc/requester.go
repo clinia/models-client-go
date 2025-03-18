@@ -72,10 +72,11 @@ func (r *requester) Infer(ctx context.Context, req common.InferRequest) (*common
 		}
 	}
 
+	// NOTE: The model version is always set to 1 because all models deployed within the same Triton server instance -- when stored in different model repositories -- must have unique names.
 	res, err := r.inferenceServiceClient.ModelInfer(ctx, &requestergrpc.ModelInferRequest{
 		Id:               req.ID,
-		ModelName:        req.ModelName,
-		ModelVersion:     req.ModelVersion,
+		ModelName:        fmt.Sprintf("%s:%s", req.ModelName, req.ModelVersion),
+		ModelVersion:     "1",
 		Inputs:           grpcInputs,
 		Outputs:          grpcOutputs,
 		RawInputContents: rawInputs,
