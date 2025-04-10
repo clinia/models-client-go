@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
+	"fmt"
 )
 
 func preprocessString(texts []string) ([]byte, []int64, error) {
@@ -55,4 +56,11 @@ func serializeByteTensor(inputTensor [][]byte) ([]byte, error) {
 	}
 
 	return flattenedBytesBuffer.Bytes(), nil
+}
+
+// formatModelNameAndVersion formats the model name and version for the request.
+// The model version is always set to 1 because all models deployed within the same Triton
+// server instance -- when stored in different model repositories -- must have unique names.
+func formatModelNameAndVersion(modelName string, modelVersion string) (string, string) {
+	return fmt.Sprintf("%s:%s", modelName, modelVersion), "1"
 }

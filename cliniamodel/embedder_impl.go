@@ -66,3 +66,8 @@ func (e *embedder) Embed(ctx context.Context, modelName, modelVersion string, re
 		Embeddings: embeddings,
 	}, nil
 }
+
+// Ready implements the Embedder interface. It checks the readiness status of the model.
+func (c *embedder) Ready(ctx context.Context, modelName string, modelVersion string) error {
+	return c.requester.Ready(ctx, modelName, modelVersion)
+}

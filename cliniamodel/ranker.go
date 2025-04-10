@@ -5,6 +5,8 @@ import "context"
 type Ranker interface {
 	// Rank returns the ranked results of the given texts.
 	Rank(ctx context.Context, modelName, modelVersion string, req RankRequest) (*RankResponse, error)
+	// Ready checks if the model is ready to receive requests.
+	Ready(ctx context.Context, modelName, modelVersion string) error
 }
 
 type RankRequest struct {

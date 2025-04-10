@@ -5,6 +5,8 @@ import "context"
 type Chunker interface {
 	// Chunk returns the chunked results of the given texts.
 	Chunk(ctx context.Context, modelName, modelVersion string, req ChunkRequest) (*ChunkResponse, error)
+	// Ready checks if the model is ready to receive requests.
+	Ready(ctx context.Context, modelName, modelVersion string) error
 }
 
 type ChunkRequest struct {

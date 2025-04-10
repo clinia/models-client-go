@@ -72,11 +72,12 @@ func (r *requester) Infer(ctx context.Context, req common.InferRequest) (*common
 		}
 	}
 
-	// NOTE: The model version is always set to 1 because all models deployed within the same Triton server instance -- when stored in different model repositories -- must have unique names.
+	// Format model name and version
+	formattedModelName, formattedModelVersion := formatModelNameAndVersion(req.ModelName, req.ModelVersion)
 	res, err := r.inferenceServiceClient.ModelInfer(ctx, &requestergrpc.ModelInferRequest{
 		Id:               req.ID,
-		ModelName:        fmt.Sprintf("%s:%s", req.ModelName, req.ModelVersion),
-		ModelVersion:     "1",
+		ModelName:        formattedModelName,
+		ModelVersion:     formattedModelVersion,
 		Inputs:           grpcInputs,
 		Outputs:          grpcOutputs,
 		RawInputContents: rawInputs,
@@ -139,6 +140,39 @@ func (r *requester) Infer(ctx context.Context, req common.InferRequest) (*common
 		ID:      res.Id,
 		Outputs: outputs,
 	}, nil
+}
+
+// Ready implements common.Requester.
+func (r *requester) Ready(ctx context.Context, modelName string, modelVersion string) error {
+	// Format model name and version
+	formattedModelName, formattedModelVersion := formatModelNameAndVersion(modelName, modelVersion)
+	res, err := r.inferenceServiceClient.ModelReady(ctx, &requestergrpc.ModelReadyRequest{
+		Name:    formattedModelName,
+		Version: formattedModelVersion,
+	})
+	if err != nil {
+		return err
+	}
+
+	if !res.Ready {
+		return fmt.Errorf("model %s with version %s is not ready", modelName, modelVersion)
+	}
+
+	return nil
+}
+
+// Health implements common.Requester.
+func (r *requester) Health(ctx context.Context) error {
+	res, err := r.inferenceServiceClient.ServerReady(ctx, &requestergrpc.ServerReadyRequest{})
+	if err != nil {
+		return err
+	}
+
+	if !res.Ready {
+		return fmt.Errorf("server at %s is not ready", r.conn.Target())
+	}
+
+	return nil
 }
 
 // Stream implements common.Requester.

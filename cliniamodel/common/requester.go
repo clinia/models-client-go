@@ -9,6 +9,10 @@ type Requester interface {
 	Infer(ctx context.Context, req InferRequest) (*InferResponse, error)
 	// Stream sends a request to the model server to perform inference on the given inputs and returns a channel to stream the output.
 	Stream(ctx context.Context, modelName, modelVersion string, inputs []Input) (chan<- string, error)
+	// Ready checks if the model is ready to receive requests.
+	Ready(ctx context.Context, modelName, modelVersion string) error
+	// Health checks if the server is ready to receive requests.
+	Health(ctx context.Context) error
 	// Close closes the connection to the model server.
 	Close() error
 }

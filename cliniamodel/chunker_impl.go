@@ -85,3 +85,8 @@ func (c *chunker) Chunk(ctx context.Context, modelName string, modelVersion stri
 		Chunks: chunks,
 	}, nil
 }
+
+// Ready implements the Chunker interface. It checks the readiness status of the model.
+func (c *chunker) Ready(ctx context.Context, modelName string, modelVersion string) error {
+	return c.requester.Ready(ctx, modelName, modelVersion)
+}

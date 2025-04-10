@@ -7,6 +7,8 @@ import (
 type Embedder interface {
 	// Embed returns the embeddings of the given texts.
 	Embed(ctx context.Context, modelName, modelVersion string, req EmbedRequest) (*EmbedResponse, error)
+	// Ready checks if the model is ready to receive requests.
+	Ready(ctx context.Context, modelName, modelVersion string) error
 }
 
 type EmbedRequest struct {

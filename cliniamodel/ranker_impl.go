@@ -98,3 +98,8 @@ func (r *ranker) Rank(ctx context.Context, modelName string, modelVersion string
 		Scores: flattenedScores,
 	}, nil
 }
+
+// Ready implements the Ranker interface. It checks the readiness status of the model.
+func (c *ranker) Ready(ctx context.Context, modelName string, modelVersion string) error {
+	return c.requester.Ready(ctx, modelName, modelVersion)
+}
