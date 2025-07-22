@@ -2,6 +2,7 @@ package cliniamodel
 
 import (
 	"context"
+	"errors"
 
 	"github.com/clinia/models-client-go/cliniamodel/common"
 	"github.com/clinia/models-client-go/cliniamodel/datatype"
@@ -29,6 +30,10 @@ func NewEmbedder(ctx context.Context, opts common.ClientOptions) Embedder {
 
 // Embed generates embeddings for the given texts using the specified model and version.
 func (e *embedder) Embed(ctx context.Context, modelName, modelVersion string, req EmbedRequest) (*EmbedResponse, error) {
+	if len(req.Texts) == 0 {
+		return nil, errors.New("texts cannot be empty")
+	}
+
 	inputs := []common.Input{
 		{
 			Name:     embedderInputKey,

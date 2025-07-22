@@ -3,6 +3,7 @@ package cliniamodel
 import (
 	"context"
 	"encoding/json"
+	"errors"
 
 	"github.com/clinia/models-client-go/cliniamodel/common"
 	"github.com/clinia/models-client-go/cliniamodel/datatype"
@@ -33,6 +34,9 @@ func NewChunker(ctx context.Context, opts common.ClientOptions) Chunker {
 // Chunk implements the Chunker interface. It takes a context, model name, model version, and a ChunkRequest as input,
 // and returns a ChunkResponse or an error.
 func (c *chunker) Chunk(ctx context.Context, modelName string, modelVersion string, req ChunkRequest) (*ChunkResponse, error) {
+	if len(req.Texts) == 0 {
+		return nil, errors.New("texts cannot be empty")
+	}
 	// Prepare the inputs.
 	inputs := []common.Input{
 		{

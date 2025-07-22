@@ -2,7 +2,9 @@ package cliniamodel
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/clinia/models-client-go/cliniamodel/common"
 	"github.com/clinia/models-client-go/cliniamodel/datatype"
@@ -38,6 +40,14 @@ func NewRanker(opts common.ClientOptions) Ranker {
 // prepares the inputs, and calls the infer function of the requester. It then processes the output to
 // return the scores.
 func (r *ranker) Rank(ctx context.Context, modelName string, modelVersion string, req RankRequest) (*RankResponse, error) {
+	if strings.TrimSpace(req.Query) == "" {
+		return nil, errors.New("query must not be empty")
+	}
+
+	if len(req.Texts) == 0 {
+		return nil, errors.New("texts cannot be empty")
+	}
+
 	// Duplicate query to be the same size as texts
 	inputQueries := make([]string, len(req.Texts))
 	for i := range req.Texts {
@@ -73,7 +83,6 @@ func (r *ranker) Rank(ctx context.Context, modelName string, modelVersion string
 		Inputs:       inputs,
 		OutputKeys:   outputKeys,
 	})
-
 	if err != nil {
 		return nil, err
 	}
