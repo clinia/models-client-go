@@ -105,6 +105,89 @@ func main() {
 }
 ```
 
+### Sparse Embedder Model
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+
+	"github.com/clinia/models-client-go/cliniamodel"
+	"github.com/clinia/models-client-go/cliniamodel/common"
+	"github.com/clinia/models-client-go/cliniamodel/requestergrpc"
+	"github.com/google/uuid"
+)
+
+func main() {
+	// Get model name and version from environment variables.
+	modelName := "splade-v3"
+	modelVersion := "20250717T150839Z"
+	if modelName == "" || modelVersion == "" {
+		log.Fatal("Environment variables CLINIA_MODEL_NAME and CLINIA_MODEL_VERSION must be set")
+	}
+
+	// Define the texts to embed
+	texts := []string{
+		"What is the treatment for diabetes?",
+		"What are the symptoms of heart disease?",
+	}
+	// var texts []string
+
+	// Create a new requester with the host configuration.
+	ctx := context.Background()
+	requester, err := requestergrpc.NewRequester(ctx, common.RequesterConfig{
+		Host: common.Host{
+			Url:    "127.0.0.1",
+			Port:   8003,
+			Scheme: common.HTTP,
+		},
+	})
+	if err != nil {
+		log.Fatalf("failed to create requester: %v", err)
+	}
+	defer requester.Close()
+
+	// Check if the server is ready
+	if err := requester.Health(ctx); err != nil {
+		log.Fatalf("server readiness check failed: %v", err)
+	}
+
+	// Create a new Embedder using the requester.
+	embedder := cliniamodel.NewSparseEmbedder(ctx, common.ClientOptions{
+		Requester: requester,
+	})
+
+	// Check if the model is ready
+	if err := embedder.Ready(ctx, modelName, modelVersion); err != nil {
+		log.Fatalf("model readiness check failed: %v", err)
+	}
+
+	// Create an EmbedRequest with a generated ID and the texts.
+	req := cliniamodel.SparseEmbedRequest{
+		ID:    uuid.New().String(),
+		Texts: texts,
+	}
+
+	// Execute the embedding request.
+	res, err := embedder.Embed(ctx, modelName, modelVersion, req)
+	if err != nil {
+		log.Fatalf("embed error: %v", err)
+	}
+
+	// Print results
+	for i, embedding := range res.Embeddings {
+		fmt.Printf("Text: %s\nEmbedding dimensions: %d\nFirst 5 values: %v\n\n",
+			texts[i],
+			len(embedding),
+			embedding,
+		)
+	}
+}
+```
+
 ### Ranker Model
 
 ```go
