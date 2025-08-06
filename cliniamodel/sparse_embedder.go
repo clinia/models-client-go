@@ -3,8 +3,8 @@ package cliniamodel
 import "context"
 
 type SparseEmbedder interface {
-	// Embed returns the sparse embeddings of the given texts.
-	Embed(ctx context.Context, modelName, modelVersion string, req SparseEmbedRequest) (*SparseEmbedResponse, error)
+	// SparseEmbed returns the sparse embeddings of the given texts.
+	SparseEmbed(ctx context.Context, modelName, modelVersion string, req SparseEmbedRequest) (*SparseEmbedResponse, error)
 	// Ready checks if the model is ready to receive requests.
 	Ready(ctx context.Context, modelName, modelVersion string) error
 }

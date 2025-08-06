@@ -172,7 +172,7 @@ func main() {
 	}
 
 	// Execute the embedding request.
-	res, err := embedder.Embed(ctx, modelName, modelVersion, req)
+	res, err := embedder.SparseEmbed(ctx, modelName, modelVersion, req)
 	if err != nil {
 		log.Fatalf("embed error: %v", err)
 	}

@@ -30,17 +30,17 @@ func NewSparseEmbedder(ctx context.Context, opts common.ClientOptions) SparseEmb
 	}
 }
 
-// Embed generates embeddings for the given texts using the specified model and version.
-func (e *sparseEmbedder) Embed(ctx context.Context, modelName, modelVersion string, req SparseEmbedRequest) (*SparseEmbedResponse, error) {
+// SparseEmbed generates embeddings for the given texts using the specified model and version.
+func (e *sparseEmbedder) SparseEmbed(ctx context.Context, modelName, modelVersion string, req SparseEmbedRequest) (*SparseEmbedResponse, error) {
 	if len(req.Texts) == 0 {
 		return nil, errors.New("texts cannot be empty")
 	}
 
 	inputs := []common.Input{
 		{
-			Name:     embedderInputKey,
+			Name:     sparseEmbedderInputKey,
 			Shape:    []int64{int64(len(req.Texts))},
-			Datatype: embedderInputDatatype,
+			Datatype: sparseEmbedderInputDatatype,
 			Content: common.Content{
 				StringContents: req.Texts,
 			},
@@ -48,7 +48,7 @@ func (e *sparseEmbedder) Embed(ctx context.Context, modelName, modelVersion stri
 	}
 
 	// The embedder model has only one input and one output.
-	outputKeys := []string{embedderOutputKey}
+	outputKeys := []string{sparseEmbedderOutputKey}
 
 	res, err := e.requester.Infer(ctx, common.InferRequest{
 		ID:           req.ID,
