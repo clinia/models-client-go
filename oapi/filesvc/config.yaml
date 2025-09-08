@@ -1,0 +1,7 @@
+package: filesvcclient
+
+generate:
+  models: true
+  client: true
+
+output: filesvc_client.gen.go
